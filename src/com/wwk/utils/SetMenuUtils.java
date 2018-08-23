@@ -19,11 +19,11 @@ import net.sf.json.JSONObject;
 
 public class SetMenuUtils {
 
-	// 测试号
-	private static final String APPID = "wx8beef4ae7533f617";
-	private static final String SECRET = "5a6c1b9473d6de18959a37c029c83c5f";
+	// 测试号 自己填
+	private static final String APPID = "";
+	private static final String SECRET = "";
 
-	private static final String requstUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8beef4ae7533f617&redirect_uri=http%3A%2F%2F43.226.37.27%2FWeChatDevelop%2FWechatRedirectServlet&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect";
+	private static final String requstUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8beef4ae7533f617&redirect_uri=http%3A%2F%2F43.226.37.27%2FWeChatDevelop%2FWechatRedirectServlet&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
 
 	private static final String DELETE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=ACCESS_TOKEN";
 

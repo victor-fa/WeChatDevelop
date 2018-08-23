@@ -31,86 +31,98 @@
 	 // 这里写你要执行的代码吧
 	 })**/
 	$(function() {
-		alert(window.location.href);
 		sendSignAjax();
 	});
 	/**
 	 * 发送sendSignAjax
 	 */
 	function sendSignAjax() {
-		//	alert("你好");
-		var aj = $
-				.ajax({
-					url : "sign.html",// 跳转到 action  
-					data : {
-						"url" : window.location.href
-					},
-					type : 'post',//提交方式 
-					cache : false,
-					dataType : 'json',
-					async : true,
-					success : function(data) {
-						//			var last=data.toJSONString(); //将JSON对象转化为JSON字符
-						alert("成功:" + data.signature);
-
-						wx.config({
-							debug : true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-							appId : data.appId, // 必填，公众号的唯一标识
-							timestamp : data.timestamp, // 必填，生成签名的时间戳
-							nonceStr : data.nonceStr, // 必填，生成签名的随机串
-							signature : data.signature,// 必填，签名，见附录1
-							jsApiList : [ 'checkJsApi', 'openLocation',
-									'getLocation', 'onMenuShareTimeline',
-									'onMenuShareAppMessage' ]  // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-						});
-						wx.ready(function() {
-									/***wx.checkJsApi({
-									    jsApiList: [
-									        'getLocation',
-									        'onMenuShareTimeline',
-									        'onMenuShareAppMessage'
-									    ],
-									    success: function (res) {
-									        alert(JSON.stringify(res));
-									    }
-									});**/
-
-									wx.onMenuShareTimeline({
-												title : '微信分享', // 分享标题
-												link : "http://www.cnblogs.com/txw1958/p/weixin-development-best-practice.html", // 分享链接
-												imgUrl : "http://images.cnitblog.com/i/340216/201404/301756448922305.jpg", // 分享图标
-												success : function() {
-													// 用户确认分享后执行的回调函数
-													alert("分享成功");
-												},
-												cancel : function() {
-													// 用户取消分享后执行的回调函数
-													alert("分享取消");
-												}
-											});
-								});
-					},
-					error : function(data) {
-						// view("异常！");  
-						alert("错误:" + data);
-					}
+		var aj = $.ajax({
+			url : "http://43.226.37.27/WeChatDevelop/WechatConfigServlet",
+			data : {
+				"url" : location.href.split('#')[0]
+			},
+			contentType : "application/x-www-form-urlencoded; charset=utf-8",
+			type : 'get',//提交方式 
+			cache : false,
+			dataType : 'json',
+			async : true,
+			success : function(data) {
+				//	var last=data.toJSONString(); //将JSON对象转化为JSON字符
+				wx.config({
+					debug : true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+					appId : data.appid, // 必填，公众号的唯一标识
+					timestamp : data.timestamp, // 必填，生成签名的时间戳
+					nonceStr : data.nonceStr, // 必填，生成签名的随机串
+					signature : data.signature,// 必填，签名，见附录1
+					jsApiList : [ 'checkJsApi', 'onMenuShareTimeline',
+							'onMenuShareAppMessage', 'onMenuShareQQ',
+							'onMenuShareWeibo', 'onMenuShareQZone',
+							'hideMenuItems', 'showMenuItems',
+							'hideAllNonBaseMenuItem',
+							'showAllNonBaseMenuItem', 'translateVoice',
+							'startRecord', 'stopRecord',
+							'onVoiceRecordEnd', 'playVoice',
+							'onVoicePlayEnd', 'pauseVoice',
+							'stopVoice', 'uploadVoice',
+							'downloadVoice', 'chooseImage',
+							'previewImage', 'uploadImage',
+							'downloadImage', 'getNetworkType',
+							'openLocation', 'getLocation',
+							'hideOptionMenu', 'showOptionMenu',
+							'closeWindow', 'scanQRCode', 'chooseWXPay',
+							'openProductSpecificView', 'addCard',
+							'chooseCard', 'openCard' ]
+				// 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 				});
+
+				wx.ready(function() {
+					// 6 设备信息接口
+					// 6.1 获取当前网络状态
+					document.querySelector('#getNetworkType').onclick = function() {
+						wx.getNetworkType({
+							success : function(res) {
+								// alert("设备信息"+res.networkType);
+							},
+							fail : function(res) {
+								// alert("设备信息"+JSON.stringify(res));
+							}
+						});
+					};
+
+					document.querySelector('#getScanQRCode').onclick = function() {
+						wx.scanQRCode({
+							needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+							scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+							success: function (res) {
+								alert(res.resultStr); // 当needResult 为 1 时，扫码返回的结果
+							}
+						});
+					};
+					
+				});
+			},
+			error : function(data) {
+				// view("异常！");  
+				alert("错误1:" + data);
+			}
+		});
 	}
 
 	function callOnMenuShareTimeline() {
 		wx.onMenuShareTimeline({
-					title : '微信分享', // 分享标题
-					link : "http://www.cnblogs.com/txw1958/p/weixin-development-best-practice.html", // 分享链接
-					imgUrl : "http://images.cnitblog.com/i/340216/201404/301756448922305.jpg", // 分享图标
-					success : function() {
-						// 用户确认分享后执行的回调函数
-						alert("分享成功");
-					},
-					cancel : function() {
-						// 用户取消分享后执行的回调函数
-						alert("分享取消");
-					}
-				});
+			title : '微信分享', // 分享标题
+			link : "http://www.cnblogs.com/txw1958/p/weixin-development-best-practice.html", // 分享链接
+			imgUrl : "http://images.cnitblog.com/i/340216/201404/301756448922305.jpg", // 分享图标
+			success : function() {
+				// 用户确认分享后执行的回调函数
+				alert("分享成功");
+			},
+			cancel : function() {
+				// 用户取消分享后执行的回调函数
+				alert("分享取消");
+			}
+		});
 	}
 </script>
 
@@ -154,8 +166,8 @@
 			<div class="swiper-pagination"></div>
 		</div>
 		<div class="menu-list clearfix">
-			<a class="item" href="#"><i class="ico-menu ico-menu-1"></i><span>UI设计</span></a>
-			<a class="item" href="#"><i class="ico-menu ico-menu-2"></i><span>PHP</span></a>
+			<a class="item" href="#"><i id="getNetworkType" class="ico-menu ico-menu-1"></i><span>UI设计</span></a>
+			<a class="item" href="#"><i id="getScanQRCode" class="ico-menu ico-menu-2"></i><span></span></a>
 			<a class="item" href="#"><i class="ico-menu ico-menu-3"></i><span>JAVA</span></a>
 			<a class="item" href="#"><i class="ico-menu ico-menu-4"></i><span>IOS</span></a>
 			<a class="item" href="#"><i class="ico-menu ico-menu-5"></i><span>架构师</span></a>
