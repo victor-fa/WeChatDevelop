@@ -17,9 +17,6 @@ import net.sf.json.JSONObject;
 
 public class CommonUtil {
 
-	// 凭证获取（GET）
-	public final static String token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
-
 	/**
 	 * 发送https请求
 	 * 

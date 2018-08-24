@@ -19,14 +19,6 @@ import net.sf.json.JSONObject;
 
 public class SetMenuUtils {
 
-	// 测试号
-	private static final String APPID = "wx8beef4ae7533f617";
-	private static final String SECRET = "5a6c1b9473d6de18959a37c029c83c5f";
-
-	private static final String requstUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8beef4ae7533f617&redirect_uri=http%3A%2F%2F43.226.37.27%2FWeChatDevelop%2FWechatRedirectServlet&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect";
-
-	private static final String DELETE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=ACCESS_TOKEN";
-
 	/**
 	 * 自定义菜单
 	 * 
@@ -41,7 +33,7 @@ public class SetMenuUtils {
 		JSONObject firstLevelMenuContext1 = new JSONObject();
 		firstLevelMenuContext1.put("type", "view");
 		firstLevelMenuContext1.put("name", "跳转链接");
-		firstLevelMenuContext1.put("url", requstUrl);
+		firstLevelMenuContext1.put("url", MessageUtil.REQUEST_URL);
 
 		// 一级菜单内容2
 		JSONObject firstLevelMenuContext2 = new JSONObject();
@@ -111,8 +103,8 @@ public class SetMenuUtils {
 	 * @throws Exception
 	 */
 	public static String getAccessToken() throws Exception {
-		String accessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID
-				+ "&secret=" + SECRET;
+		String accessTokenUrl = MessageUtil.GET_ACCESS_TOKEN + MessageUtil.APPID
+				+ "&secret=" + MessageUtil.SECRET;
 		URL url = new URL(accessTokenUrl);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -139,11 +131,11 @@ public class SetMenuUtils {
 	 * @throws Exception
 	 */
 	public static void createCustomMenu() throws Exception {
-		String custmMenuUrl = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=";
-
+		String custmMenuUrl = "";
+		
 		// 获取access_token
 		String accessToken = getAccessToken();
-		custmMenuUrl = custmMenuUrl + accessToken;
+		custmMenuUrl = MessageUtil.CREATE_MENU_URL + accessToken;
 
 		URL url = new URL(custmMenuUrl);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -196,7 +188,7 @@ public class SetMenuUtils {
 	 * @throws IOException
 	 */
 	public static int deleteMenu(String token) throws ParseException, IOException {
-		String url = DELETE_MENU_URL.replace("ACCESS_TOKEN", token);
+		String url = MessageUtil.DELETE_MENU_URL.replace("ACCESS_TOKEN", token);
 		JSONObject jsonObject = doGetStr(url);
 		int result = 0;
 		if (jsonObject != null) {

@@ -1,7 +1,6 @@
 package com.wwk.wechatServlet;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,9 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 import com.wwk.utils.CommonUtil;
+import com.wwk.utils.MessageUtil;
 
 import net.sf.json.JSONObject;
 
@@ -22,11 +20,11 @@ import net.sf.json.JSONObject;
 public class WechatRedirectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	// 登录网页授权接口
-	private static final String authorizationUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxeb8a208f1113e1a0&redirect_uri=http%3A%2F%2F43.226.37.27%2FWeChatDevelop%2FWechatRedirectServlet&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect";
+	String authorizationUrl = MessageUtil.AUTHORIZATION_URL;
 
 	// 测试号
-	private static final String APPID = "wx8beef4ae7533f617";
-	private static final String SECRET = "5a6c1b9473d6de18959a37c029c83c5f";
+	private static final String APPID = MessageUtil.APPID;
+	private static final String SECRET = MessageUtil.SECRET;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -35,21 +33,30 @@ public class WechatRedirectServlet extends HttpServlet {
 		// 第一步：用户同意授权，获取code
 		String code = request.getParameter("code");
 		System.out.println("code" + code);
-
+		
+		String accessToken = "";
+		String refreshToken = "";
+		String openId = "";
 		// 第二步：通过code换取网页授权access_token
 		String url1 = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APPID + "&secret=" + SECRET
 				+ "&code=" + code + "&grant_type=authorization_code";
-		JSONObject accessJson = CommonUtil.httpsRequest(url1, "GET", null);
-		System.out.println("accessJson" + accessJson.toString());
+		if(!code.equals("")) {
+			JSONObject accessJson = CommonUtil.httpsRequest(url1, "GET", null);
 
-		String accessToken = accessJson.getString("access_token");
-		String refreshToken = accessJson.getString("refresh_token");
-		String openId = accessJson.getString("openid");
-		System.out.println("accessJson" + accessJson.toString());
+			accessToken = accessJson.getString("access_token");
+			refreshToken = accessJson.getString("refresh_token");
+			openId = accessJson.getString("openid");
+			System.out.println("accessJson" + accessJson.toString());
+		}else {
+			// 第三步：刷新access_token（如果需要）
+			String url2 = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + APPID + "&grant_type=refresh_token&refresh_token=" + refreshToken; 
+			JSONObject refreshTokenJson = CommonUtil.httpsRequest(url2, "GET", null);
 
-		// 第三步：刷新access_token（如果需要）
-		String url2 = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid="+APPID+"&grant_type=refresh_token&refresh_token="+refreshToken; 
-		JSONObject refreshTokenJson = CommonUtil.httpsRequest(url2, "GET", null);
+			accessToken = refreshTokenJson.getString("access_token");
+			refreshToken = refreshTokenJson.getString("refresh_token");
+			openId = refreshTokenJson.getString("openid");
+			System.out.println("refreshJson" + refreshTokenJson.toString());
+		}
 
 		// 第四步：拉取用户信息(需scope为 snsapi_userinfo)
 		String url3 = "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId
@@ -67,7 +74,7 @@ public class WechatRedirectServlet extends HttpServlet {
 		request.setAttribute("userInfoJson", userInfoJson);
 		request.setAttribute("openId", openId);
 		request.setAttribute("nickname", userInfoJson.getString("nickname"));
-		response.sendRedirect("http://43.226.37.27/WeChatDevelop/recruit_web");
+		response.sendRedirect(MessageUtil.RECRUIT_URL);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

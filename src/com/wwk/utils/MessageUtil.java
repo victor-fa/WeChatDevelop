@@ -1,6 +1,7 @@
 package com.wwk.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.thoughtworks.xstream.XStream;
@@ -69,6 +71,22 @@ public class MessageUtil {
 	// 响应消息类型：图文
 	public static final String RESP_MESSAGE_TYPE_NEWS = "news";
 
+	public final static String IP = "http://43.226.37.27";
+	public final static String TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
+	public final static String APPID = "wx8beef4ae7533f617";// 第三方用户唯一凭证 
+	public final static String ACCESS_TOKEN = "stormfa";
+	public final static String GRANT_TYPE = "client_credential";//获取access_token填写client_credential   
+	public final static String SECRET = "5a6c1b9473d6de18959a37c029c83c5f";//第三方用户唯一凭证密钥，即appsecret  
+	public final static String SUCCESS = "200";
+	public final static String AUTHORIZATION_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxeb8a208f1113e1a0&redirect_uri=http%3A%2F%2F43.226.37.27%2FWeChatDevelop%2FWechatRedirectServlet&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect";
+
+	public final static String RECRUIT_URL = "http://43.226.37.27/WeChatDevelop/recruit_web";
+	public final static String REQUEST_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8beef4ae7533f617&redirect_uri=http%3A%2F%2F43.226.37.27%2FWeChatDevelop%2FWechatRedirectServlet&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
+
+	public final static String GET_ACCESS_TOKEN = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=";
+	public final static String CREATE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=";
+	public final static String DELETE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=ACCESS_TOKEN";
+	
 	/**
 	 * 解析微信发来的请求（XML）
 	 * 

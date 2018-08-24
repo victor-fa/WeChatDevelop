@@ -10,12 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import com.wwk.entity.Signature;
 import com.wwk.service.CoreService;
 import com.wwk.utils.CheckUtil;
 import com.wwk.utils.MessageUtil;
-import com.wwk.utils.SignUtil;
 
 /**
  * Servlet implementation class WechatDevelopServlet

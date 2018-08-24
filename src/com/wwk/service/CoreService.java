@@ -47,7 +47,6 @@ public class CoreService {
 				String content = requestMap.get("Content");
 				if (content.equals("开灯")) {
 					respContent = "灯已开！";
-//                  respContent = "您发送的是文本消息！内容是:\n"+content;
 				} else if (content.equals("关灯")) {
 					respContent = "灯已关！";
 				} else {
